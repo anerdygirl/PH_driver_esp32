@@ -12,9 +12,9 @@ void readsample(int AnalogPin, int *buf, int size) {
   }
 }
 
-// Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+// Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V).. or (0 - 4095) to (0 - 3.3V) for esp32
 float analogtovolt(unsigned long int avg) {
-  float pHVol = (float)avg * 5.0 / 1024 / 6;
+  float pHVol = (float)avg * 3.3 / 4096 / 6;
   return pHVol;
 }
 
