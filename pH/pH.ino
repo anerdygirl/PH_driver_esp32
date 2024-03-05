@@ -1,16 +1,24 @@
-#include "pH.h"
+#ifndef ARRAY_MANIPULATION_H
+#define ARRAY_MANIPULATION_H
+void manipulateArray(int (&arr)[10]);  // Function declaration with reference parameter
+#endif
 
-const int analogInPin = A0;
+// variables
+int sensorValue = 0;  // init reading
+unsigned long int avgValue = 0;
+float b;
+int buf[10], temp;
 
-
-void setup() {
-  Serial.begin(9600);
+// get 10 readings
+void readsample(int AnalogPin, int (&buf)[10]) {
+  for (int i = 0; i < 10; i++) {
+    buf[i] = analogRead(AnalogPin);
+    delay(10);
+  }
 }
 
-void loop() {
-  readsample(A0, &buf);
-
-  // sort readings in ascending order
+// sort in ascending order
+void sortAscend(int (&buf)[10]){
   for (int i = 0; i < 9; i++) {
     for (int j = i + 1; j < 10; j++) {
       if (buf[i] > buf[j]) {
@@ -20,15 +28,16 @@ void loop() {
       }
     }
   }
-  // remove the smallest and the largest readings then calculate avg reading
-  for (int i = 2; i < 8; i++)
-    avgValue += buf[i];
+}
 
-  float pHVol = analogtovolt(avgValue);
-  float pHValue = getpH(pHVol);
+// Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
+float analogtovolt(unsigned long int avg) {
+  float pHVol = (float)avg * 5.0 / 1024 / 6;
+  return pHVol;
+}
 
-  Serial.print("sensor = ");
-  Serial.println(phValue);
-
-  delay(20);
+// find pH according to the sensor equation: y= -5.70 * x + 21.34
+float getpH(float volt) {
+  float ph = -5.70 * volt + 21.34;
+  return ph;
 }
