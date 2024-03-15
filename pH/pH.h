@@ -1,6 +1,7 @@
 #ifndef PH_H
 #define PH_H
 void readsample(int AnalogPin, int (&buf)[10]);  // Function declaration with reference parameter
+void sortAscend(int (&buf)[10]);
 #endif
 
 // variables
@@ -15,18 +16,24 @@ void readsample(int AnalogPin, int (&buf)[10]) {
     buf[i] = analogRead(AnalogPin);
     delay(10);
   }
+  // sort readings in ascending order
+  sortAscend(buf);
+
+  // remove the smallest and the largest readings then calculate avg reading
+  for (int i = 2; i < 8; i++)
+    avgValue += buf[i];
 }
 
 // sort in ascending order
 void sortAscend(int (&buf)[10]){
   for (int i = 0; i < 9; i++) {
-    for (int j = i + 1; j < 10; j++) {
+    for (int j = i + 1; j < 10; j++) 
       if (buf[i] > buf[j]) {
         temp = buf[i];
         buf[i] = buf[j];
         buf[j] = temp;
       }
-    }
+    
   }
 }
 
